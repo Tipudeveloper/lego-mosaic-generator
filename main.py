@@ -1,16 +1,36 @@
 import tkinter as tk
+from tkinter import messagebox
 
 root = tk.Tk()
-root.title("lego mosaic generator")
+root.title("Lego Mosaic Generator")
 root.geometry("300x200")
 
-label = tk.Label(root, text="lego mosaic generator", font=("Arial", 14))
+label = tk.Label(root, text="Lego Mosaic Generator", font=("Arial", 14))
 label.pack(pady=20)
 
-def press():
-    print("but nothing happened")
+value_var = tk.StringVar()
+value_entry = tk.Entry(root, textvariable=value_var)
+value_entry.pack()
 
-button = tk.Button(root, text="generate mosaic", command=press)
+def update_value():
+    try:
+        value = int(value_var.get())
+        print("Mosaic scale:", value, "x", value)
+    except ValueError:
+        print("Invalid number")
+    root.after(500, update_value)
+
+update_value()
+
+
+def press():
+    try:
+        value = int(value_var.get())
+        print("Button pressed, value:", value)
+    except ValueError:
+        messagebox.showerror("Error", "Please enter a valid number.")
+
+button = tk.Button(root, text="Generate Mosaic", command=press)
 button.pack()
 
 root.mainloop()
