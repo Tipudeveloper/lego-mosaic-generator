@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import messagebox, filedialog
 from generator import BasicMosaicGenerator
+from PIL import Image, ImageDraw
 
 root = tk.Tk()
 root.title("Lego Mosaic Generator")
@@ -20,6 +21,7 @@ file_var = tk.StringVar()
 file_var.set("No file selected")
 
 file_display = tk.Label(root, textvariable=file_var, font=("Arial", 10), fg="gray")
+
 file_display.pack(pady=(0,10))
 
 def select_file():
@@ -103,11 +105,37 @@ def generate_mosaic():
         save_path = save_var.get()
         
         # Generate the mosaic
-        output_path, color_info = generator.generate_mosaic(file_path, width, height, save_path)
+        mosaic = generator.generate_mosaic(file_path, width, height)
+        
+        # Create output image from mosaic
+        # Create output image
+        output_img = Image.new('RGB', (width, height), (255, 255, 255))
+        draw = ImageDraw.Draw(output_img)
+        
+        # Draw mosaic pixels
+        for y in range(height):
+            for x in range(width):
+                color = mosaic[y][x]
+                draw.point((x, y), fill=color)
+        
+        # Save the image
+        output_img.save(save_path)
+        
+        # Count color usage
+        color_counts = {}
+        for row in mosaic:
+            for color in row:
+                color_name = None
+                for name, rgb in generator.basic_colors.items():
+                    if rgb == color:
+                        color_name = name
+                        break
+                if color_name:
+                    color_counts[color_name] = color_counts.get(color_name, 0) + 1
         
         # Create info message
-        info_text = f"Mosaic generated successfully!\n\nOutput: {output_path}\nSize: {width}x{height}\n\nColor usage:"
-        for color, count in sorted(color_info.items(), key=lambda x: x[1], reverse=True):
+        info_text = f"Mosaic generated successfully!\n\nOutput: {save_path}\nSize: {width}x{height}\n\nColor usage:"
+        for color, count in sorted(color_counts.items(), key=lambda x: x[1], reverse=True):
             info_text += f"\n{color}: {count} bricks"
         
         messagebox.showinfo(title="Basic Mosaic Generator", message=info_text)

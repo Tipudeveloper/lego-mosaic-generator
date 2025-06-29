@@ -6,6 +6,7 @@ from sklearn.cluster import KMeans
 
 class BasicMosaicGenerator:
     def __init__(self):
+        # Ultra-comprehensive color palette for maximum accuracy
         self.basic_colors = {
             # Pure colors
             'Black': (0, 0, 0),              # #000000
@@ -17,81 +18,163 @@ class BasicMosaicGenerator:
             'Cyan': (0, 255, 255),           # #00FFFF
             'Magenta': (255, 0, 255),        # #FF00FF
             
-            # Grays (extended)
-            'Very_Dark_Gray': (16, 16, 16),  # #101010
-            'Dark_Gray': (32, 32, 32),       # #202020
-            'Medium_Dark_Gray': (64, 64, 64), # #404040
-            'Gray': (128, 128, 128),         # #808080
+            # Grays (ultra-fine)
+            'Very_Dark_Gray': (8, 8, 8),     # #080808
+            'Dark_Gray': (16, 16, 16),       # #101010
+            'Medium_Dark_Gray': (32, 32, 32), # #202020
+            'Gray': (64, 64, 64),            # #404040
+            'Medium_Gray': (96, 96, 96),     # #606060
+            'Light_Gray': (128, 128, 128),   # #808080
             'Medium_Light_Gray': (160, 160, 160), # #A0A0A0
-            'Light_Gray': (192, 192, 192),   # #C0C0C0
-            'Very_Light_Gray': (224, 224, 224), # #E0E0E0
-            'Almost_White': (240, 240, 240), # #F0F0F0
+            'Very_Light_Gray': (192, 192, 192), # #C0C0C0
+            'Almost_White': (224, 224, 224), # #E0E0E0
+            'Nearly_White': (240, 240, 240), # #F0F0F0
             
-            # Reds (extended)
-            'Very_Dark_Red': (64, 0, 0),     # #400000
-            'Dark_Red': (128, 0, 0),         # #800000
-            'Medium_Red': (192, 0, 0),       # #C00000
-            'Red': (255, 0, 0),              # #FF0000
-            'Light_Red': (255, 128, 128),    # #FF8080
-            'Very_Light_Red': (255, 192, 192), # #FFC0C0
+            # Reds (ultra-fine)
+            'Very_Dark_Red': (16, 0, 0),     # #100000
+            'Dark_Red': (32, 0, 0),          # #200000
+            'Medium_Dark_Red': (48, 0, 0),   # #300000
+            'Red': (64, 0, 0),               # #400000
+            'Medium_Red': (80, 0, 0),        # #500000
+            'Bright_Red': (96, 0, 0),        # #600000
+            'Pure_Red': (128, 0, 0),         # #800000
+            'Medium_Bright_Red': (160, 0, 0), # #A00000
+            'Bright_Red': (192, 0, 0),       # #C00000
+            'Very_Bright_Red': (224, 0, 0),  # #E00000
+            'Pure_Red': (255, 0, 0),         # #FF0000
+            'Light_Red': (255, 64, 64),      # #FF4040
+            'Medium_Light_Red': (255, 96, 96), # #FF6060
+            'Very_Light_Red': (255, 128, 128), # #FF8080
+            'Pale_Red': (255, 160, 160),     # #FFA0A0
+            'Very_Pale_Red': (255, 192, 192), # #FFC0C0
             
-            # Greens (extended)
-            'Very_Dark_Green': (0, 64, 0),   # #004000
-            'Dark_Green': (0, 128, 0),       # #008000
-            'Medium_Green': (0, 192, 0),     # #00C000
-            'Green': (0, 255, 0),            # #00FF00
-            'Light_Green': (128, 255, 128),  # #80FF80
-            'Very_Light_Green': (192, 255, 192), # #C0FFC0
+            # Greens (ultra-fine)
+            'Very_Dark_Green': (0, 16, 0),   # #001000
+            'Dark_Green': (0, 32, 0),        # #002000
+            'Medium_Dark_Green': (0, 48, 0), # #003000
+            'Green': (0, 64, 0),             # #004000
+            'Medium_Green': (0, 80, 0),      # #005000
+            'Bright_Green': (0, 96, 0),      # #006000
+            'Pure_Green': (0, 128, 0),       # #008000
+            'Medium_Bright_Green': (0, 160, 0), # #00A000
+            'Bright_Green': (0, 192, 0),     # #00C000
+            'Very_Bright_Green': (0, 224, 0), # #00E000
+            'Pure_Green': (0, 255, 0),       # #00FF00
+            'Light_Green': (64, 255, 64),    # #40FF40
+            'Medium_Light_Green': (96, 255, 96), # #60FF60
+            'Very_Light_Green': (128, 255, 128), # #80FF80
+            'Pale_Green': (160, 255, 160),   # #A0FFA0
+            'Very_Pale_Green': (192, 255, 192), # #C0FFC0
             
-            # Blues (extended)
-            'Very_Dark_Blue': (0, 0, 64),    # #000040
-            'Dark_Blue': (0, 0, 128),        # #000080
-            'Medium_Blue': (0, 0, 192),      # #0000C0
-            'Blue': (0, 0, 255),             # #0000FF
-            'Light_Blue': (128, 128, 255),   # #8080FF
-            'Very_Light_Blue': (192, 192, 255), # #C0C0FF
+            # Blues (ultra-fine)
+            'Very_Dark_Blue': (0, 0, 16),    # #000010
+            'Dark_Blue': (0, 0, 32),         # #000020
+            'Medium_Dark_Blue': (0, 0, 48),  # #000030
+            'Blue': (0, 0, 64),              # #000040
+            'Medium_Blue': (0, 0, 80),       # #000050
+            'Bright_Blue': (0, 0, 96),       # #000060
+            'Pure_Blue': (0, 0, 128),        # #000080
+            'Medium_Bright_Blue': (0, 0, 160), # #0000A0
+            'Bright_Blue': (0, 0, 192),      # #0000C0
+            'Very_Bright_Blue': (0, 0, 224), # #0000E0
+            'Pure_Blue': (0, 0, 255),        # #0000FF
+            'Light_Blue': (64, 64, 255),     # #4040FF
+            'Medium_Light_Blue': (96, 96, 255), # #6060FF
+            'Very_Light_Blue': (128, 128, 255), # #8080FF
+            'Pale_Blue': (160, 160, 255),    # #A0A0FF
+            'Very_Pale_Blue': (192, 192, 255), # #C0C0FF
             
-            # Yellows (extended)
-            'Very_Dark_Yellow': (64, 64, 0), # #404000
-            'Dark_Yellow': (128, 128, 0),    # #808000
-            'Medium_Yellow': (192, 192, 0),  # #C0C000
-            'Yellow': (255, 255, 0),         # #FFFF00
-            'Light_Yellow': (255, 255, 128), # #FFFF80
-            'Very_Light_Yellow': (255, 255, 192), # #FFFFC0
+            # Yellows (ultra-fine)
+            'Very_Dark_Yellow': (16, 16, 0), # #101000
+            'Dark_Yellow': (32, 32, 0),      # #202000
+            'Medium_Dark_Yellow': (48, 48, 0), # #303000
+            'Yellow': (64, 64, 0),           # #404000
+            'Medium_Yellow': (80, 80, 0),    # #505000
+            'Bright_Yellow': (96, 96, 0),    # #606000
+            'Pure_Yellow': (128, 128, 0),    # #808000
+            'Medium_Bright_Yellow': (160, 160, 0), # #A0A000
+            'Bright_Yellow': (192, 192, 0),  # #C0C000
+            'Very_Bright_Yellow': (224, 224, 0), # #E0E000
+            'Pure_Yellow': (255, 255, 0),    # #FFFF00
+            'Light_Yellow': (255, 255, 64),  # #FFFF40
+            'Medium_Light_Yellow': (255, 255, 96), # #FFFF60
+            'Very_Light_Yellow': (255, 255, 128), # #FFFF80
+            'Pale_Yellow': (255, 255, 160),  # #FFFFA0
+            'Very_Pale_Yellow': (255, 255, 192), # #FFFFC0
             
-            # Oranges (extended)
-            'Very_Dark_Orange': (64, 32, 0), # #402000
-            'Dark_Orange': (128, 64, 0),     # #804000
-            'Medium_Orange': (192, 96, 0),   # #C06000
-            'Orange': (255, 165, 0),         # #FFA500
-            'Light_Orange': (255, 200, 128), # #FFC880
-            'Very_Light_Orange': (255, 224, 192), # #FFE0C0
+            # Oranges (ultra-fine)
+            'Very_Dark_Orange': (16, 8, 0),  # #100800
+            'Dark_Orange': (32, 16, 0),      # #201000
+            'Medium_Dark_Orange': (48, 24, 0), # #301800
+            'Orange': (64, 32, 0),           # #402000
+            'Medium_Orange': (80, 40, 0),    # #502800
+            'Bright_Orange': (96, 48, 0),    # #603000
+            'Pure_Orange': (128, 64, 0),     # #804000
+            'Medium_Bright_Orange': (160, 80, 0), # #A05000
+            'Bright_Orange': (192, 96, 0),   # #C06000
+            'Very_Bright_Orange': (224, 112, 0), # #E07000
+            'Pure_Orange': (255, 128, 0),    # #FF8000
+            'Light_Orange': (255, 160, 64),  # #FFA040
+            'Medium_Light_Orange': (255, 176, 96), # #FFB060
+            'Very_Light_Orange': (255, 192, 128), # #FFC080
+            'Pale_Orange': (255, 208, 160),  # #FFD0A0
+            'Very_Pale_Orange': (255, 224, 192), # #FFE0C0
             
-            # Purples (extended)
-            'Very_Dark_Purple': (32, 0, 64), # #200040
-            'Dark_Purple': (64, 0, 128),     # #400080
-            'Medium_Purple': (96, 0, 192),   # #6000C0
-            'Purple': (128, 0, 128),         # #800080
-            'Light_Purple': (200, 128, 200), # #C880C8
-            'Very_Light_Purple': (224, 192, 224), # #E0C0E0
+            # Purples (ultra-fine)
+            'Very_Dark_Purple': (8, 0, 16),  # #080010
+            'Dark_Purple': (16, 0, 32),      # #100020
+            'Medium_Dark_Purple': (24, 0, 48), # #180030
+            'Purple': (32, 0, 64),           # #200040
+            'Medium_Purple': (40, 0, 80),    # #280050
+            'Bright_Purple': (48, 0, 96),    # #300060
+            'Pure_Purple': (64, 0, 128),     # #400080
+            'Medium_Bright_Purple': (80, 0, 160), # #5000A0
+            'Bright_Purple': (96, 0, 192),   # #6000C0
+            'Very_Bright_Purple': (112, 0, 224), # #7000E0
+            'Pure_Purple': (128, 0, 128),    # #800080
+            'Light_Purple': (160, 64, 160),  # #A040A0
+            'Medium_Light_Purple': (176, 96, 176), # #B060B0
+            'Very_Light_Purple': (192, 128, 192), # #C080C0
+            'Pale_Purple': (208, 160, 208),  # #D0A0D0
+            'Very_Pale_Purple': (224, 192, 224), # #E0C0E0
             
-            # Browns (extended)
-            'Very_Dark_Brown': (32, 16, 0),  # #201000
-            'Dark_Brown': (64, 32, 0),       # #402000
-            'Medium_Brown': (96, 48, 0),     # #603000
-            'Brown': (139, 69, 19),          # #8B4513
-            'Light_Brown': (210, 180, 140),  # #D2B48C
-            'Very_Light_Brown': (224, 192, 128), # #E0C080
+            # Browns (ultra-fine)
+            'Very_Dark_Brown': (8, 4, 0),    # #080400
+            'Dark_Brown': (16, 8, 0),        # #100800
+            'Medium_Dark_Brown': (24, 12, 0), # #180C00
+            'Brown': (32, 16, 0),            # #201000
+            'Medium_Brown': (40, 20, 0),     # #281400
+            'Bright_Brown': (48, 24, 0),     # #301800
+            'Pure_Brown': (64, 32, 0),       # #402000
+            'Medium_Bright_Brown': (80, 40, 0), # #502800
+            'Bright_Brown': (96, 48, 0),     # #603000
+            'Very_Bright_Brown': (112, 56, 0), # #703800
+            'Pure_Brown': (128, 64, 0),      # #804000
+            'Light_Brown': (160, 96, 32),    # #A06020
+            'Medium_Light_Brown': (176, 112, 48), # #B07030
+            'Very_Light_Brown': (192, 128, 64), # #C08040
+            'Pale_Brown': (208, 160, 96),    # #D0A060
+            'Very_Pale_Brown': (224, 192, 128), # #E0C080
             
-            # Pinks (extended)
-            'Very_Dark_Pink': (64, 0, 32),   # #400020
-            'Dark_Pink': (128, 0, 64),       # #800040
-            'Medium_Pink': (192, 0, 96),     # #C00060
-            'Pink': (255, 192, 203),         # #FFC0CB
-            'Light_Pink': (255, 224, 240),   # #FFE0F0
-            'Very_Light_Pink': (255, 240, 248), # #FFF0F8
+            # Pinks (ultra-fine)
+            'Very_Dark_Pink': (16, 0, 8),    # #100008
+            'Dark_Pink': (32, 0, 16),        # #200010
+            'Medium_Dark_Pink': (48, 0, 24), # #300018
+            'Pink': (64, 0, 32),             # #400020
+            'Medium_Pink': (80, 0, 40),      # #500028
+            'Bright_Pink': (96, 0, 48),      # #600030
+            'Pure_Pink': (128, 0, 64),       # #800040
+            'Medium_Bright_Pink': (160, 0, 80), # #A00050
+            'Bright_Pink': (192, 0, 96),     # #C00060
+            'Very_Bright_Pink': (224, 0, 112), # #E00070
+            'Pure_Pink': (255, 64, 128),     # #FF4080
+            'Light_Pink': (255, 96, 160),    # #FF60A0
+            'Medium_Light_Pink': (255, 128, 176), # #FF80B0
+            'Very_Light_Pink': (255, 160, 192), # #FFA0C0
+            'Pale_Pink': (255, 192, 208),    # #FFC0D0
+            'Very_Pale_Pink': (255, 224, 240), # #FFE0F0
             
-            # Additional colors for better coverage
+            # Additional colors for maximum coverage
             'Maroon': (128, 0, 0),           # #800000
             'Olive': (128, 128, 0),          # #808000
             'Navy': (0, 0, 128),             # #000080
@@ -142,37 +225,115 @@ class BasicMosaicGenerator:
         
         return cropped
     
-    def is_background_pixel(self, pixel, threshold=245):
-        """Check if pixel is background (white or near white)"""
-        # Check if all RGB values are above threshold
-        return all(pixel[i] > threshold for i in range(3))
-    
     def find_closest_color(self, pixel_color):
-        """Find the closest basic color to the given pixel color using simple RGB distance"""
+        """Find the closest color from the palette using improved distance calculation."""
         min_distance = float('inf')
         closest_color = None
         
-        # Ensure pixel_color is in correct format
-        if len(pixel_color) == 1:  # Grayscale pixel
-            pixel_rgb = (pixel_color[0], pixel_color[0], pixel_color[0])
-        else:
-            pixel_rgb = pixel_color
+        # Convert pixel to LAB for better perceptual distance calculation
+        pixel_lab = self.rgb_to_lab(pixel_color)
         
-        # Skip background colors for non-background pixels
-        for name, basic_color in self.basic_colors.items():
-            if len(basic_color) == 3:  # Only use solid colors
-                # Skip very light colors for non-background pixels
-                if name in ['White', 'Very_Light_Gray', 'Light_Gray'] and not self.is_background_pixel(pixel_rgb):
-                    continue
+        for color_name, palette_color in self.basic_colors.items():
+            # Convert palette color to LAB
+            palette_lab = self.rgb_to_lab(palette_color)
+            
+            # Calculate weighted distance using both RGB and LAB
+            rgb_distance = self.calculate_rgb_distance(pixel_color, palette_color)
+            lab_distance = self.calculate_lab_distance(pixel_lab, palette_lab)
+            
+            # Weighted combination: LAB for perceptual accuracy, RGB for precision
+            total_distance = (0.7 * lab_distance) + (0.3 * rgb_distance)
+            
+            if total_distance < min_distance:
+                min_distance = total_distance
+                closest_color = palette_color
                 
-                # Calculate simple Euclidean distance in RGB space
-                distance = np.sqrt(sum((pixel_rgb[i] - basic_color[i])**2 for i in range(3)))
-                
-                if distance < min_distance:
-                    min_distance = distance
-                    closest_color = name
-        
         return closest_color
+    
+    def rgb_to_lab(self, rgb_color):
+        """Convert RGB color to LAB color space for better perceptual distance calculation."""
+        # Simple approximation of LAB conversion
+        r, g, b = rgb_color[0] / 255.0, rgb_color[1] / 255.0, rgb_color[2] / 255.0
+        
+        # Convert to XYZ (simplified)
+        if r > 0.04045:
+            r = ((r + 0.055) / 1.055) ** 2.4
+        else:
+            r = r / 12.92
+            
+        if g > 0.04045:
+            g = ((g + 0.055) / 1.055) ** 2.4
+        else:
+            g = g / 12.92
+            
+        if b > 0.04045:
+            b = ((b + 0.055) / 1.055) ** 2.4
+        else:
+            b = b / 12.92
+            
+        r *= 100
+        g *= 100
+        b *= 100
+        
+        # Simplified XYZ to LAB conversion
+        x = r * 0.4124 + g * 0.3576 + b * 0.1805
+        y = r * 0.2126 + g * 0.7152 + b * 0.0722
+        z = r * 0.0193 + g * 0.1192 + b * 0.9505
+        
+        # Normalize
+        x = x / 95.047
+        y = y / 100.0
+        z = z / 108.883
+        
+        if x > 0.008856:
+            x = x ** (1/3)
+        else:
+            x = (7.787 * x) + (16 / 116)
+            
+        if y > 0.008856:
+            y = y ** (1/3)
+        else:
+            y = (7.787 * y) + (16 / 116)
+            
+        if z > 0.008856:
+            z = z ** (1/3)
+        else:
+            z = (7.787 * z) + (16 / 116)
+            
+        l = (116 * y) - 16
+        a = 500 * (x - y)
+        b_val = 200 * (y - z)
+        
+        return (l, a, b_val)
+    
+    def calculate_rgb_distance(self, color1, color2):
+        """Calculate weighted RGB distance with emphasis on brightness."""
+        r1, g1, b1 = color1
+        r2, g2, b2 = color2
+        
+        # Weight brightness more heavily (luminance)
+        brightness1 = 0.299 * r1 + 0.587 * g1 + 0.114 * b1
+        brightness2 = 0.299 * r2 + 0.587 * g2 + 0.114 * b2
+        
+        # Calculate weighted distance
+        brightness_diff = abs(brightness1 - brightness2)
+        color_diff = ((r1 - r2) ** 2 + (g1 - g2) ** 2 + (b1 - b2) ** 2) ** 0.5
+        
+        # Weight brightness more heavily
+        return (0.6 * brightness_diff) + (0.4 * color_diff)
+    
+    def calculate_lab_distance(self, lab1, lab2):
+        """Calculate CIEDE2000-like distance in LAB space."""
+        l1, a1, b1 = lab1
+        l2, a2, b2 = lab2
+        
+        # Simplified CIEDE2000 distance calculation
+        delta_l = l2 - l1
+        delta_a = a2 - a1
+        delta_b = b2 - b1
+        
+        # Weight L (lightness) more heavily for perceptual accuracy
+        return ((delta_l * 2) ** 2 + delta_a ** 2 + delta_b ** 2) ** 0.5
     
     def resize_image(self, image_path, width, height):
         """Resize image to target dimensions with cropping for non-square images"""
@@ -197,95 +358,41 @@ class BasicMosaicGenerator:
         resized = cv2.resize(img, (width, height), interpolation=cv2.INTER_AREA)
         return resized
     
-    def generate_mosaic(self, image_path, width, height, output_path=None):
-        """Generate mosaic from image with systematic color mapping"""
-        try:
-            # Resize and crop image
-            resized_img = self.resize_image(image_path, width, height)
-            
-            # Convert to RGB
-            rgb_img = cv2.cvtColor(resized_img, cv2.COLOR_BGR2RGB)
-            
-            # Create working copy
-            working_img = rgb_img.astype(np.float32)
-            
-            # Create output image
-            output_img = Image.new('RGB', (width, height), (255, 255, 255))
-            draw = ImageDraw.Draw(output_img)
-            
-            # Background detection threshold
-            background_threshold = 240  # Pixels with RGB values above this are considered background
-            
-            # Process each pixel
-            for y in range(height):
-                for x in range(width):
-                    # Get current pixel color
-                    old_pixel = working_img[y, x].copy()
-                    
-                    # Check if pixel is background
-                    is_background = self.is_background_pixel(old_pixel, background_threshold)
-                    
-                    if is_background:
-                        # Keep background white
-                        closest_color_rgb = (255, 255, 255)
-                        closest_color_name = 'White'
-                    else:
-                        # Find closest color for non-background pixels
-                        closest_color_name = self.find_closest_color(old_pixel.astype(int))
-                        closest_color_rgb = self.basic_colors[closest_color_name]
-                    
-                    # Set new pixel color
-                    new_pixel = np.array(closest_color_rgb, dtype=np.float32)
-                    working_img[y, x] = new_pixel
-                    
-                    # Apply simple dithering to non-background pixels
-                    if not is_background:
-                        # Calculate quantization error
-                        quant_error = old_pixel - new_pixel
-                        
-                        # Only apply dithering if error is significant
-                        error_magnitude = np.sqrt(np.sum(quant_error**2))
-                        if error_magnitude > 20:  # Lower threshold for more subtle dithering
-                            # Distribute error to neighboring pixels (reduced dithering)
-                            if x + 1 < width:
-                                working_img[y, x + 1] += quant_error * 0.3
-                            if y + 1 < height:
-                                working_img[y + 1, x] += quant_error * 0.3
-                    
-                    # Draw pixel with color
-                    draw.point((x, y), fill=closest_color_rgb)
-            
-            # Save output
-            if output_path is None:
-                # Create output directory if it doesn't exist
-                os.makedirs('output', exist_ok=True)
-                output_path = f'output/basic_mosaic_{width}x{height}.png'
-            
-            output_img.save(output_path)
-            
-            # Create color mapping info
-            color_info = self.create_color_mapping(resized_img)
-            
-            return output_path, color_info
-            
-        except Exception as e:
-            raise Exception(f"Error generating mosaic: {str(e)}")
+    def generate_mosaic(self, image_path, width, height):
+        """Generate a mosaic from the given image"""
+        # Resize and crop image to target dimensions
+        resized_image = self.resize_image(image_path, width, height)
+        
+        # Convert BGR to RGB (OpenCV uses BGR, we need RGB)
+        resized_image = cv2.cvtColor(resized_image, cv2.COLOR_BGR2RGB)
+        
+        # Create mosaic array
+        mosaic = []
+        
+        for y in range(height):
+            row = []
+            for x in range(width):
+                # Get pixel color (OpenCV array is [y, x, channels])
+                pixel_color = tuple(resized_image[y, x])
+                
+                # Find closest color from palette
+                closest_color = self.find_closest_color(pixel_color)
+                
+                # Add to row
+                row.append(closest_color)
+            mosaic.append(row)
+        
+        return mosaic
     
     def create_color_mapping(self, resized_img):
-        """Create a mapping of original colors to basic colors"""
-        color_mapping = {}
-        
-        for y in range(resized_img.shape[0]):
-            for x in range(resized_img.shape[1]):
-                pixel = resized_img[y, x]
-                pixel_rgb = (pixel[2], pixel[1], pixel[0])
-                basic_color = self.find_closest_color(pixel_rgb)
-                
-                if basic_color not in color_mapping:
-                    color_mapping[basic_color] = 0
-                color_mapping[basic_color] += 1
-        
-        return color_mapping
+        """Create a mapping of colors used in the mosaic"""
+        # This method is no longer needed with the new algorithm
+        pass
+    
+    def is_background_pixel(self, pixel, threshold=240):
+        """Check if a pixel is considered background"""
+        # This method is no longer needed with the new algorithm
+        pass
     
     def get_available_colors(self):
         """Return list of available basic colors"""
