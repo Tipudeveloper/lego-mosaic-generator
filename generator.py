@@ -66,6 +66,53 @@ class BasicMosaicGenerator:
             'Pale_Green': (160, 255, 160),   # #A0FFA0
             'Very_Pale_Green': (192, 255, 192), # #C0FFC0
             
+            # Olive Greens (for Yoda-like skin tones)
+            'Very_Dark_Olive': (16, 20, 8),  # #101408
+            'Dark_Olive': (32, 40, 16),      # #202810
+            'Medium_Dark_Olive': (48, 60, 24), # #303C18
+            'Olive_Green': (64, 80, 32),     # #405020
+            'Medium_Olive': (80, 100, 40),   # #506428
+            'Bright_Olive': (96, 120, 48),   # #607830
+            'Pure_Olive': (128, 160, 64),    # #80A040
+            'Medium_Bright_Olive': (160, 200, 80), # #A0C850
+            'Bright_Olive': (192, 240, 96),  # #C0F060
+            'Very_Bright_Olive': (224, 255, 112), # #E0FF70
+            'Light_Olive': (240, 255, 128),  # #F0FF80
+            'Medium_Light_Olive': (255, 255, 144), # #FFFF90
+            'Very_Light_Olive': (255, 255, 160), # #FFFFA0
+            'Pale_Olive': (255, 255, 176),   # #FFFFB0
+            'Very_Pale_Olive': (255, 255, 192), # #FFFFC0
+            
+            # Yellow-Greens (for more natural green tones)
+            'Very_Dark_Yellow_Green': (16, 24, 0), # #101800
+            'Dark_Yellow_Green': (32, 48, 0),      # #203000
+            'Medium_Dark_Yellow_Green': (48, 72, 0), # #304800
+            'Yellow_Green': (64, 96, 0),           # #406000
+            'Medium_Yellow_Green': (80, 120, 0),   # #507800
+            'Bright_Yellow_Green': (96, 144, 0),   # #609000
+            'Pure_Yellow_Green': (128, 192, 0),    # #80C000
+            'Medium_Bright_Yellow_Green': (160, 240, 0), # #A0F000
+            'Bright_Yellow_Green': (192, 255, 0),  # #C0FF00
+            'Very_Bright_Yellow_Green': (224, 255, 64), # #E0FF40
+            'Light_Yellow_Green': (240, 255, 96),  # #F0FF60
+            'Medium_Light_Yellow_Green': (255, 255, 128), # #FFFF80
+            'Very_Light_Yellow_Green': (255, 255, 160), # #FFFFA0
+            'Pale_Yellow_Green': (255, 255, 192),  # #FFFFC0
+            'Very_Pale_Yellow_Green': (255, 255, 224), # #FFFFE0
+            
+            # Sage Greens (more muted, natural greens)
+            'Very_Dark_Sage': (20, 24, 16),  # #141810
+            'Dark_Sage': (40, 48, 32),       # #283020
+            'Medium_Dark_Sage': (60, 72, 48), # #3C4830
+            'Sage_Green': (80, 96, 64),      # #506040
+            'Medium_Sage': (100, 120, 80),   # #647850
+            'Bright_Sage': (120, 144, 96),   # #789060
+            'Pure_Sage': (160, 192, 128),    # #A0C080
+            'Medium_Bright_Sage': (200, 240, 160), # #C8F0A0
+            'Bright_Sage': (240, 255, 192),  # #F0FFC0
+            'Very_Bright_Sage': (255, 255, 224), # #FFFFE0
+            'Light_Sage': (255, 255, 240),   # #FFFFF0
+            
             # Blues (ultra-fine)
             'Very_Dark_Blue': (0, 0, 16),    # #000010
             'Dark_Blue': (0, 0, 32),         # #000020
@@ -217,6 +264,10 @@ class BasicMosaicGenerator:
         # Convert pixel to LAB for better perceptual distance calculation
         pixel_lab = self.rgb_to_lab(pixel_color)
         
+        # Determine if pixel is greenish
+        r, g, b = pixel_color
+        is_greenish = g > max(r, b) * 1.2  # Green component is significantly higher
+        
         for color_name, palette_color in self.basic_colors.items():
             # Convert palette color to LAB
             palette_lab = self.rgb_to_lab(palette_color)
@@ -228,11 +279,31 @@ class BasicMosaicGenerator:
             # Weighted combination: LAB for perceptual accuracy, RGB for precision
             total_distance = (0.7 * lab_distance) + (0.3 * rgb_distance)
             
+            # Bonus for green colors if pixel is greenish
+            if is_greenish and self.is_green_color(palette_color):
+                total_distance *= 0.7  # 30% bonus for green colors
+            
             if total_distance < min_distance:
                 min_distance = total_distance
                 closest_color = palette_color
                 
         return closest_color
+    
+    def is_green_color(self, color):
+        """Check if a color is in the green family"""
+        r, g, b = color
+        # Check if it's a green variant (olive, yellow-green, sage, etc.)
+        green_variants = [
+            'Green', 'Olive', 'Yellow_Green', 'Sage', 'Forest_Green', 'Spring_Green'
+        ]
+        
+        # Check by name first
+        for name, palette_color in self.basic_colors.items():
+            if palette_color == color:
+                return any(variant in name for variant in green_variants)
+        
+        # Fallback: check if green component is dominant
+        return g > max(r, b) * 1.1
     
     def rgb_to_lab(self, rgb_color):
         """Convert RGB color to LAB color space for better perceptual distance calculation."""

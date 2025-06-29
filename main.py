@@ -84,9 +84,17 @@ height_frame.pack(pady=2)
 height_label = tk.Label(height_frame, text="Height:", font=("Arial", 10))
 height_label.pack(side=tk.LEFT, padx=(0,5))
 height_var = tk.StringVar()
-height_var.set("32")  # Default height
+height_var.set("64")  # Default height
 height_entry = tk.Entry(height_frame, textvariable=height_var, width=8)
 height_entry.pack(side=tk.LEFT)
+
+# Grid option
+grid_frame = tk.Frame(root)
+grid_frame.pack(pady=5)
+grid_var = tk.BooleanVar()
+grid_var.set(True)  # Show grid by default
+grid_checkbox = tk.Checkbutton(grid_frame, text="Show Grid", variable=grid_var, font=("Arial", 10))
+grid_checkbox.pack()
 
 def generate_mosaic():
     try:
@@ -107,16 +115,32 @@ def generate_mosaic():
         # Generate the mosaic
         mosaic = generator.generate_mosaic(file_path, width, height)
         
-        # Create output image from mosaic
-        # Create output image
-        output_img = Image.new('RGB', (width, height), (255, 255, 255))
+        # Create output image with grid
+        # Scale factor for better visibility (each pixel becomes a larger square)
+        scale_factor = 20  # Each mosaic pixel becomes 20x20 pixels
+        grid_color = (100, 100, 100)  # Dark gray for grid lines
+        show_grid = grid_var.get()  # Get grid setting
+        
+        # Create larger output image
+        output_width = width * scale_factor
+        output_height = height * scale_factor
+        output_img = Image.new('RGB', (output_width, output_height), (255, 255, 255))
         draw = ImageDraw.Draw(output_img)
         
-        # Draw mosaic pixels
+        # Draw mosaic pixels as larger squares
         for y in range(height):
             for x in range(width):
                 color = mosaic[y][x]
-                draw.point((x, y), fill=color)
+                # Calculate square coordinates
+                x1 = x * scale_factor
+                y1 = y * scale_factor
+                x2 = x1 + scale_factor
+                y2 = y1 + scale_factor
+                # Draw filled square with or without grid
+                if show_grid:
+                    draw.rectangle([x1, y1, x2, y2], fill=color, outline=grid_color)
+                else:
+                    draw.rectangle([x1, y1, x2, y2], fill=color)
         
         # Save the image
         output_img.save(save_path)
@@ -134,7 +158,7 @@ def generate_mosaic():
                     color_counts[color_name] = color_counts.get(color_name, 0) + 1
         
         # Create info message
-        info_text = f"Mosaic generated successfully!\n\nOutput: {save_path}\nSize: {width}x{height}\n\nColor usage:"
+        info_text = f"Mosaic generated successfully!\n\nOutput: {save_path}\nSize: {width}x{height} (scaled to {output_width}x{output_height})\n\nColor usage:"
         for color, count in sorted(color_counts.items(), key=lambda x: x[1], reverse=True):
             info_text += f"\n{color}: {count} bricks"
         
