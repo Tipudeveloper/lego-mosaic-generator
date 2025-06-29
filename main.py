@@ -96,6 +96,14 @@ grid_var.set(True)  # Show grid by default
 grid_checkbox = tk.Checkbutton(grid_frame, text="Show Grid", variable=grid_var, font=("Arial", 10))
 grid_checkbox.pack()
 
+# Studs option
+studs_frame = tk.Frame(root)
+studs_frame.pack(pady=2)
+studs_var = tk.BooleanVar()
+studs_var.set(True)  # Show studs by default
+studs_checkbox = tk.Checkbutton(studs_frame, text="Show Lego Studs", variable=studs_var, font=("Arial", 10))
+studs_checkbox.pack()
+
 def generate_mosaic():
     try:
         file_path = file_var.get()
@@ -120,6 +128,7 @@ def generate_mosaic():
         scale_factor = 20  # Each mosaic pixel becomes 20x20 pixels
         grid_color = (100, 100, 100)  # Dark gray for grid lines
         show_grid = grid_var.get()  # Get grid setting
+        show_studs = studs_var.get()  # Get studs setting
         
         # Create larger output image
         output_width = width * scale_factor
@@ -136,11 +145,28 @@ def generate_mosaic():
                 y1 = y * scale_factor
                 x2 = x1 + scale_factor
                 y2 = y1 + scale_factor
-                # Draw filled square with or without grid
+                
+                # Draw filled square (Lego brick base)
                 if show_grid:
                     draw.rectangle([x1, y1, x2, y2], fill=color, outline=grid_color)
                 else:
                     draw.rectangle([x1, y1, x2, y2], fill=color)
+                
+                # Draw Lego stud (circular top) if enabled
+                if show_studs:
+                    stud_radius = scale_factor // 3  # Stud size
+                    stud_center_x = x1 + scale_factor // 2
+                    stud_center_y = y1 + scale_factor // 2
+                    
+                    # Create darker shade for the stud (3D effect)
+                    stud_color = tuple(max(0, c - 40) for c in color)  # Darker version of the color
+                    
+                    # Draw stud circle
+                    stud_x1 = stud_center_x - stud_radius
+                    stud_y1 = stud_center_y - stud_radius
+                    stud_x2 = stud_center_x + stud_radius
+                    stud_y2 = stud_center_y + stud_radius
+                    draw.ellipse([stud_x1, stud_y1, stud_x2, stud_y2], fill=stud_color)
         
         # Save the image
         output_img.save(save_path)

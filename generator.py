@@ -167,6 +167,42 @@ class BasicMosaicGenerator:
             'Pale_Orange': (255, 208, 160),  # #FFD0A0
             'Very_Pale_Orange': (255, 224, 192), # #FFE0C0
             
+            # Cat Orange (more realistic orange tones)
+            'Dark_Cat_Orange': (128, 64, 0),     # #804000
+            'Medium_Cat_Orange': (160, 80, 0),   # #A05000
+            'Cat_Orange': (192, 96, 0),          # #C06000
+            'Bright_Cat_Orange': (224, 112, 0),  # #E07000
+            'Pure_Cat_Orange': (255, 128, 0),    # #FF8000
+            'Light_Cat_Orange': (255, 140, 0),   # #FF8C00
+            'Medium_Light_Cat_Orange': (255, 150, 0), # #FF9600
+            'Very_Light_Cat_Orange': (255, 160, 0),   # #FFA000
+            'Pale_Cat_Orange': (255, 170, 0),    # #FFAA00
+            'Very_Pale_Cat_Orange': (255, 180, 0), # #FFB400
+            
+            # Ginger/Amber Oranges (for cat fur)
+            'Dark_Ginger': (120, 60, 0),         # #783C00
+            'Medium_Ginger': (150, 75, 0),       # #964B00
+            'Ginger_Orange': (180, 90, 0),       # #B45A00
+            'Bright_Ginger': (210, 105, 0),      # #D26900
+            'Pure_Ginger': (240, 120, 0),        # #F07800
+            'Light_Ginger': (255, 130, 0),       # #FF8200
+            'Medium_Light_Ginger': (255, 140, 0), # #FF8C00
+            'Very_Light_Ginger': (255, 150, 0),  # #FF9600
+            'Pale_Ginger': (255, 160, 0),        # #FFA000
+            'Very_Pale_Ginger': (255, 170, 0),   # #FFAA00
+            
+            # Warm Oranges (more red-orange tones)
+            'Dark_Warm_Orange': (140, 50, 0),    # #8C3200
+            'Medium_Warm_Orange': (170, 60, 0),  # #AA3C00
+            'Warm_Orange': (200, 70, 0),         # #C84600
+            'Bright_Warm_Orange': (230, 80, 0),  # #E65000
+            'Pure_Warm_Orange': (255, 90, 0),    # #FF5A00
+            'Light_Warm_Orange': (255, 110, 0),  # #FF6E00
+            'Medium_Light_Warm_Orange': (255, 130, 0), # #FF8200
+            'Very_Light_Warm_Orange': (255, 150, 0), # #FF9600
+            'Pale_Warm_Orange': (255, 170, 0),   # #FFAA00
+            'Very_Pale_Warm_Orange': (255, 190, 0), # #FFBE00
+            
             # Purples (ultra-fine)
             'Very_Dark_Purple': (8, 0, 16),  # #080010
             'Dark_Purple': (16, 0, 32),      # #100020
@@ -267,6 +303,7 @@ class BasicMosaicGenerator:
         # Determine if pixel is greenish
         r, g, b = pixel_color
         is_greenish = g > max(r, b) * 1.2  # Green component is significantly higher
+        is_orangeish = r > g * 1.3 and g > b * 1.2  # Red dominant, green secondary, blue low
         
         for color_name, palette_color in self.basic_colors.items():
             # Convert palette color to LAB
@@ -282,6 +319,10 @@ class BasicMosaicGenerator:
             # Bonus for green colors if pixel is greenish
             if is_greenish and self.is_green_color(palette_color):
                 total_distance *= 0.7  # 30% bonus for green colors
+            
+            # Bonus for orange colors if pixel is orangeish
+            if is_orangeish and self.is_orange_color(palette_color):
+                total_distance *= 0.7  # 30% bonus for orange colors
             
             if total_distance < min_distance:
                 min_distance = total_distance
@@ -304,6 +345,22 @@ class BasicMosaicGenerator:
         
         # Fallback: check if green component is dominant
         return g > max(r, b) * 1.1
+    
+    def is_orange_color(self, color):
+        """Check if a color is in the orange family"""
+        r, g, b = color
+        # Check if it's an orange variant (cat orange, ginger, warm orange, etc.)
+        orange_variants = [
+            'Orange', 'Cat_Orange', 'Ginger', 'Warm_Orange', 'Orange_Red', 'Coral', 'Salmon'
+        ]
+        
+        # Check by name first
+        for name, palette_color in self.basic_colors.items():
+            if palette_color == color:
+                return any(variant in name for variant in orange_variants)
+        
+        # Fallback: check if it's orange-like (red dominant, green secondary, blue low)
+        return r > g * 1.2 and g > b * 1.1
     
     def rgb_to_lab(self, rgb_color):
         """Convert RGB color to LAB color space for better perceptual distance calculation."""
