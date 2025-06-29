@@ -7,6 +7,8 @@ root.geometry("300x200")
 
 label = tk.Label(root, text="Lego Mosaic Generator", font=("Arial", 14))
 label.pack(pady=20)
+label2 = tk.Label(root, text="value", font=("Arial", 14))
+label2.pack(pady=(10,5))
 
 value_var = tk.StringVar()
 value_entry = tk.Entry(root, textvariable=value_var)
