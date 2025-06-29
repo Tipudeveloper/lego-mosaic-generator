@@ -12,15 +12,15 @@ value_var = tk.StringVar()
 value_entry = tk.Entry(root, textvariable=value_var)
 value_entry.pack()
 
-def update_value():
+def loop():
     try:
         value = int(value_var.get())
         print("Mosaic scale:", value, "x", value)
     except ValueError:
         print("Invalid number")
-    root.after(500, update_value)
+    root.after(500, loop)
 
-update_value()
+loop()
 
 
 def press():
