@@ -6,7 +6,6 @@ from sklearn.cluster import KMeans
 
 class BasicMosaicGenerator:
     def __init__(self):
-        # Simple but comprehensive color palette covering full 0-255 range
         self.basic_colors = {
             # Pure colors
             'Black': (0, 0, 0),              # #000000
@@ -18,50 +17,81 @@ class BasicMosaicGenerator:
             'Cyan': (0, 255, 255),           # #00FFFF
             'Magenta': (255, 0, 255),        # #FF00FF
             
-            # Grays
-            'Very_Dark_Gray': (32, 32, 32),  # #202020
-            'Dark_Gray': (64, 64, 64),       # #404040
+            # Grays (extended)
+            'Very_Dark_Gray': (16, 16, 16),  # #101010
+            'Dark_Gray': (32, 32, 32),       # #202020
+            'Medium_Dark_Gray': (64, 64, 64), # #404040
             'Gray': (128, 128, 128),         # #808080
+            'Medium_Light_Gray': (160, 160, 160), # #A0A0A0
             'Light_Gray': (192, 192, 192),   # #C0C0C0
             'Very_Light_Gray': (224, 224, 224), # #E0E0E0
+            'Almost_White': (240, 240, 240), # #F0F0F0
             
-            # Reds
+            # Reds (extended)
+            'Very_Dark_Red': (64, 0, 0),     # #400000
             'Dark_Red': (128, 0, 0),         # #800000
+            'Medium_Red': (192, 0, 0),       # #C00000
             'Red': (255, 0, 0),              # #FF0000
             'Light_Red': (255, 128, 128),    # #FF8080
-            'Pink': (255, 192, 203),         # #FFC0CB
+            'Very_Light_Red': (255, 192, 192), # #FFC0C0
             
-            # Greens
+            # Greens (extended)
+            'Very_Dark_Green': (0, 64, 0),   # #004000
             'Dark_Green': (0, 128, 0),       # #008000
+            'Medium_Green': (0, 192, 0),     # #00C000
             'Green': (0, 255, 0),            # #00FF00
             'Light_Green': (128, 255, 128),  # #80FF80
+            'Very_Light_Green': (192, 255, 192), # #C0FFC0
             
-            # Blues
+            # Blues (extended)
+            'Very_Dark_Blue': (0, 0, 64),    # #000040
             'Dark_Blue': (0, 0, 128),        # #000080
+            'Medium_Blue': (0, 0, 192),      # #0000C0
             'Blue': (0, 0, 255),             # #0000FF
             'Light_Blue': (128, 128, 255),   # #8080FF
+            'Very_Light_Blue': (192, 192, 255), # #C0C0FF
             
-            # Yellows
+            # Yellows (extended)
+            'Very_Dark_Yellow': (64, 64, 0), # #404000
             'Dark_Yellow': (128, 128, 0),    # #808000
+            'Medium_Yellow': (192, 192, 0),  # #C0C000
             'Yellow': (255, 255, 0),         # #FFFF00
             'Light_Yellow': (255, 255, 128), # #FFFF80
+            'Very_Light_Yellow': (255, 255, 192), # #FFFFC0
             
-            # Oranges
+            # Oranges (extended)
+            'Very_Dark_Orange': (64, 32, 0), # #402000
             'Dark_Orange': (128, 64, 0),     # #804000
+            'Medium_Orange': (192, 96, 0),   # #C06000
             'Orange': (255, 165, 0),         # #FFA500
             'Light_Orange': (255, 200, 128), # #FFC880
+            'Very_Light_Orange': (255, 224, 192), # #FFE0C0
             
-            # Purples
+            # Purples (extended)
+            'Very_Dark_Purple': (32, 0, 64), # #200040
             'Dark_Purple': (64, 0, 128),     # #400080
+            'Medium_Purple': (96, 0, 192),   # #6000C0
             'Purple': (128, 0, 128),         # #800080
             'Light_Purple': (200, 128, 200), # #C880C8
+            'Very_Light_Purple': (224, 192, 224), # #E0C0E0
             
-            # Browns
+            # Browns (extended)
+            'Very_Dark_Brown': (32, 16, 0),  # #201000
             'Dark_Brown': (64, 32, 0),       # #402000
+            'Medium_Brown': (96, 48, 0),     # #603000
             'Brown': (139, 69, 19),          # #8B4513
             'Light_Brown': (210, 180, 140),  # #D2B48C
+            'Very_Light_Brown': (224, 192, 128), # #E0C080
             
-            # Additional colors
+            # Pinks (extended)
+            'Very_Dark_Pink': (64, 0, 32),   # #400020
+            'Dark_Pink': (128, 0, 64),       # #800040
+            'Medium_Pink': (192, 0, 96),     # #C00060
+            'Pink': (255, 192, 203),         # #FFC0CB
+            'Light_Pink': (255, 224, 240),   # #FFE0F0
+            'Very_Light_Pink': (255, 240, 248), # #FFF0F8
+            
+            # Additional colors for better coverage
             'Maroon': (128, 0, 0),           # #800000
             'Olive': (128, 128, 0),          # #808000
             'Navy': (0, 0, 128),             # #000080
@@ -213,11 +243,14 @@ class BasicMosaicGenerator:
                         # Calculate quantization error
                         quant_error = old_pixel - new_pixel
                         
-                        # Distribute error to neighboring pixels (simple dithering)
-                        if x + 1 < width:
-                            working_img[y, x + 1] += quant_error * 0.5
-                        if y + 1 < height:
-                            working_img[y + 1, x] += quant_error * 0.5
+                        # Only apply dithering if error is significant
+                        error_magnitude = np.sqrt(np.sum(quant_error**2))
+                        if error_magnitude > 20:  # Lower threshold for more subtle dithering
+                            # Distribute error to neighboring pixels (reduced dithering)
+                            if x + 1 < width:
+                                working_img[y, x + 1] += quant_error * 0.3
+                            if y + 1 < height:
+                                working_img[y + 1, x] += quant_error * 0.3
                     
                     # Draw pixel with color
                     draw.point((x, y), fill=closest_color_rgb)
