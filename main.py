@@ -3,7 +3,7 @@ from tkinter import messagebox
 
 root = tk.Tk()
 root.title("Lego Mosaic Generator")
-root.geometry("300x200")
+root.geometry("500x350")
 
 label = tk.Label(root, text="Lego Mosaic Generator", font=("Arial", 14))
 label.pack(pady=20)
