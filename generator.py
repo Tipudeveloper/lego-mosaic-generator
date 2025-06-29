@@ -209,22 +209,6 @@ class BasicMosaicGenerator:
             if len(color) == 3:  # Skip transparent colors for now
                 self.basic_colors_bgr[name] = (color[2], color[1], color[0])
     
-    def crop_to_square(self, image):
-        """Crop image to square format from center"""
-        height, width = image.shape[:2]
-        
-        # Find the smaller dimension
-        min_dim = min(width, height)
-        
-        # Calculate crop coordinates (center crop)
-        start_x = (width - min_dim) // 2
-        start_y = (height - min_dim) // 2
-        
-        # Crop the image
-        cropped = image[start_y:start_y + min_dim, start_x:start_x + min_dim]
-        
-        return cropped
-    
     def find_closest_color(self, pixel_color):
         """Find the closest color from the palette using improved distance calculation."""
         min_distance = float('inf')
@@ -336,7 +320,7 @@ class BasicMosaicGenerator:
         return ((delta_l * 2) ** 2 + delta_a ** 2 + delta_b ** 2) ** 0.5
     
     def resize_image(self, image_path, width, height):
-        """Resize image to target dimensions with cropping for non-square images"""
+        """Resize image to target dimensions while preserving aspect ratio and filling the target size"""
         # Read image
         if image_path.lower().endswith(('.png', '.jpg', '.jpeg', '.gif', '.bmp')):
             img = cv2.imread(image_path)
@@ -351,11 +335,32 @@ class BasicMosaicGenerator:
         elif img.shape[2] == 4:  # RGBA image
             img = cv2.cvtColor(img, cv2.COLOR_BGRA2BGR)
         
-        # Crop to square first
-        img = self.crop_to_square(img)
+        # Get original dimensions
+        orig_height, orig_width = img.shape[:2]
         
-        # Resize image
-        resized = cv2.resize(img, (width, height), interpolation=cv2.INTER_AREA)
+        # Calculate aspect ratios
+        target_aspect = width / height
+        orig_aspect = orig_width / orig_height
+        
+        # Calculate new dimensions to maintain aspect ratio
+        if orig_aspect > target_aspect:
+            # Original image is wider - crop width
+            new_width = int(orig_height * target_aspect)
+            new_height = orig_height
+            start_x = (orig_width - new_width) // 2
+            start_y = 0
+        else:
+            # Original image is taller - crop height
+            new_width = orig_width
+            new_height = int(orig_width / target_aspect)
+            start_x = 0
+            start_y = (orig_height - new_height) // 2
+        
+        # Crop image to match target aspect ratio
+        cropped = img[start_y:start_y + new_height, start_x:start_x + new_width]
+        
+        # Resize to target dimensions
+        resized = cv2.resize(cropped, (width, height), interpolation=cv2.INTER_AREA)
         return resized
     
     def generate_mosaic(self, image_path, width, height):
