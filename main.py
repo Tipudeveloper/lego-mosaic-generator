@@ -15,9 +15,8 @@ value_entry.pack()
 def loop():
     try:
         value = int(value_var.get())
-        print("Mosaic scale:", value, "x", value)
     except ValueError:
-        print("Invalid number")
+        pass
     root.after(500, loop)
 
 loop()
@@ -26,7 +25,7 @@ loop()
 def press():
     try:
         value = int(value_var.get())
-        print("Button pressed, value:", value)
+        messagebox.showinfo(title="lego mosaic generator", message=f"Generating value: {value}")
     except ValueError:
         messagebox.showerror("Error", "Please enter a valid number.")
 
